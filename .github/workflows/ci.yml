@@ -1,0 +1,28 @@
+name: VoltCalc Pro
+
+on:
+  push:
+    branches: [ "production" ]
+  pull_request:
+    branches: [ "production" ]
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.0.0"
+      
+      - name: Install Dependencies
+        run: bun install
+      
+      - name: Run Tests
+        run: bun test --coverage
+
+      - name: Build Production Bundle
+        run: bun run build
