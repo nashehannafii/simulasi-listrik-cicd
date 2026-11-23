@@ -1,0 +1,14 @@
+{
+    "name": "simulasi-listrik-cicd",
+    "version": "1.0.0",
+    "description": "Aplikasi web simulasi tarif listrik bulanan untuk praktikum CI/CD",
+    "scripts": {
+        "test": "bun test",
+        "build": "bun build ./public/index.html --outdir ./dist",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "vite": "^5.4.0",
+        "vitest": "^2.1.0"
+    }
+}

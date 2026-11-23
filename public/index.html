@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulasi Tagihan Listrik Bulanan</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>⚡ Simulasi Listrik Bulanan</h1>
+      <p>Demo Aplikasi Web dengan Pipeline CI/CD</p>
+    </header>
+
+    <form id="form-listrik">
+      <div class="form-group">
+        <label for="golongan">Golongan Daya Listrik</label>
+        <select id="golongan" required>
+          <option value="900">900 VA (Rp 1.352 / kWh)</option>
+          <option value="1300" selected>1.300 VA (Rp 1.444,70 / kWh)</option>
+          <option value="2200">2.200 VA (Rp 1.444,70 / kWh)</option>
+          <option value="3500">3.500 VA+ (Rp 1.699,53 / kWh)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="watt">Total Daya Perangkat (Watt)</label>
+        <input type="number" id="watt" placeholder="Contoh: 500" min="1" required />
+      </div>
+
+      <div class="form-group">
+        <label for="jam">Rata-rata Pemakaian per Hari (Jam)</label>
+        <input type="number" id="jam" placeholder="Contoh: 8" min="0.1" max="24" step="0.1" required />
+      </div>
+
+      <button type="submit">Hitung Estimasi Biaya</button>
+    </form>
+
+    <section id="hasil-box" class="hasil-box hidden">
+      <h2>Estimasi Tagihan (30 Hari)</h2>
+      <div class="detail">
+        <span>Total Pemakaian:</span>
+        <strong id="out-kwh">0 kWh</strong>
+      </div>
+      <div class="detail total">
+        <span>Total Biaya:</span>
+        <strong id="out-biaya">Rp 0</strong>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { hitungTagihanBulanan } from './calculator.js';
+
+    const form = document.getElementById('form-listrik');
+    const hasilBox = document.getElementById('hasil-box');
+    const outKwh = document.getElementById('out-kwh');
+    const outBiaya = document.getElementById('out-biaya');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const golongan = document.getElementById('golongan').value;
+      const watt = parseFloat(document.getElementById('watt').value);
+      const jam = parseFloat(document.getElementById('jam').value);
+
+      try {
+        const hasil = hitungTagihanBulanan(watt, jam, golongan);
+        outKwh.textContent = `${hasil.kwhBulanan} kWh`;
+        outBiaya.textContent = new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          maximumFractionDigits: 0
+        }).format(hasil.totalBiaya);
+        
+        hasilBox.classList.remove('hidden');
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+  </script>
+</body>
+</html>
