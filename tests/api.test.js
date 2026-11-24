@@ -9,6 +9,7 @@ beforeAll(() => {
   baseUrl = `http://localhost:${server.port}`;
 });
 
+
 afterAll(() => {
   server.stop(true);
 });
